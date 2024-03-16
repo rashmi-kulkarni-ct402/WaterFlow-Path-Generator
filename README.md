@@ -28,4 +28,4 @@ This project is designed to analyze a given terrain represented as an STL file a
 ## Output
 The application visualizes the terrain and the water flow path in a 3D OpenGL window. The terrain is rendered in a solid color, while the water flow path is highlighted for easy identification.
 
-<img width="443" alt="WaterFlowPath" src="https://github.com/rashmi-kulkarni-ct402/WaterFlow-Path-Generator/assets/158051740/ce3dba7d-0143-4337-a067-a792c7617097">
+<img width="671" alt="WaterFlowPath" src="https://github.com/rashmi-kulkarni-ct402/WaterFlow-Path-Generator/assets/158051740/da60063f-d5ae-407d-a8ea-2ab6212d6816">
