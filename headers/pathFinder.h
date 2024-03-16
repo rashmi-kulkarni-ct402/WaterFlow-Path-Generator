@@ -20,7 +20,7 @@ namespace PathFinding
     private:      
         void buildAdjacencyList();
         Geometry::Point3D findHighestPoint() const;
-        vector<Geometry::Point3D> getNeighbors(const Geometry::Point3D& point);
+        vector<Geometry::Point3D> findNeighbors(const Geometry::Point3D& point);
         Geometry::Point3D findPathFromPoint(const Geometry::Point3D& currentPoint); 
 
         Shapes3D::Triangulation mTriangulation;
