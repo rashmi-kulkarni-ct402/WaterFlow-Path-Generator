@@ -63,7 +63,7 @@ Geometry::Point3D PathFinding::PathFinder::findHighestPoint() const
 }
 
 // finds neighboring points for a given point
-vector<Geometry::Point3D> PathFinding::PathFinder::getNeighbors(const Geometry::Point3D& point)
+vector<Geometry::Point3D> PathFinding::PathFinder::findNeighbors(const Geometry::Point3D& point)
 {
     vector<Geometry::Point3D> neighbors;
 
@@ -98,7 +98,7 @@ vector<Geometry::Point3D> PathFinding::PathFinder::getNeighbors(const Geometry::
 Geometry::Point3D PathFinding::PathFinder::findPathFromPoint(const Geometry::Point3D& currentPoint)
 {
     // assign all neighboring points of current point in "neighbors" vector
-    std::vector<Geometry::Point3D> neighbors = getNeighbors(currentPoint);
+    std::vector<Geometry::Point3D> neighbors = findNeighbors(currentPoint);
 
     Geometry::Point3D nextPoint = currentPoint;
 
@@ -125,12 +125,12 @@ std::vector<Geometry::Point3D> PathFinding::PathFinder::findWaterFlowPath()
     Geometry::Point3D currentPoint = findHighestPoint();
     waterFlowPath.push_back(currentPoint);
 
-    // Set a maximum number of steps to prevent infinite loop
-    const int maxSteps = 10000;
-    int stepCount = 0;
+    // iterations limit to prevent infinite loop
+    const int maxIterations = 10000;
+    int iterationCount = 0;
 
     // find water flow path until no lower neighbor is found
-    while (stepCount < maxSteps)
+    while (iterationCount < maxIterations)
     {
         // find next point from current point
         Geometry::Point3D nextPoint = findPathFromPoint(currentPoint);
@@ -140,16 +140,18 @@ std::vector<Geometry::Point3D> PathFinding::PathFinder::findWaterFlowPath()
         {
             break;
         }
+
         // add next point in waterFlowPath vector
         waterFlowPath.push_back(nextPoint);
+        
         // assign next point as current point for next iteration
         currentPoint = nextPoint;
-        stepCount++;
+        iterationCount++;
     }
 
-    if (stepCount >= maxSteps)
+    if (iterationCount >= maxIterations)
     {
-        std::cerr << "Warning: Maximum number of steps reached, possible infinite loop." << std::endl;
+        std::cerr << "Max iterations reached -> possible infinite loop issue." << std::endl;
     }
 
     return waterFlowPath;
