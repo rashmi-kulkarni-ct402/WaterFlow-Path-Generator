@@ -1,8 +1,5 @@
 #pragma once
 #include "Triangulation.h"
-#include <queue>
-#include <vector>
-#include <limits>
 
 using namespace std;
 
@@ -20,8 +17,8 @@ namespace PathFinding
     private:      
         void buildAdjacencyList();
         Geometry::Point3D findHighestPoint() const;
-        vector<Geometry::Point3D> findNeighbors(const Geometry::Point3D& point);
-        Geometry::Point3D findPathFromPoint(const Geometry::Point3D& currentPoint); 
+        vector<Geometry::Point3D> findNeighbors(const Geometry::Point3D& inCurrentHighestPoint);
+        Geometry::Point3D findNextPointInPath(const Geometry::Point3D& inCurrentHighestPoint);
 
         Shapes3D::Triangulation mTriangulation;
         vector<Geometry::Point3D> mWaterFlowPath;

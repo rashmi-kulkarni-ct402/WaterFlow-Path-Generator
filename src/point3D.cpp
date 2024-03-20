@@ -42,3 +42,8 @@ bool Geometry::Point3D::operator==(const Point3D& other) const
 {
     return mX == other.mX && mY == other.mY && mZ == other.mZ;
 }
+
+//bool Geometry::Point3D::operator!=(const Point3D& other) const
+//{
+//    return !(*this == other);
+//}

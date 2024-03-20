@@ -54,7 +54,7 @@ Geometry::Point3D PathFinding::PathFinder::findHighestPoint() const
     // iterate through all unique points to find the highest point
     for (const auto& point : mTriangulation.uniquePoints())
     {
-        if (point.y() > highestPoint.y())
+        if (point.z() > highestPoint.z())
         {
             highestPoint = point;
         }
@@ -63,7 +63,7 @@ Geometry::Point3D PathFinding::PathFinder::findHighestPoint() const
 }
 
 // finds neighboring points for a given point
-vector<Geometry::Point3D> PathFinding::PathFinder::findNeighbors(const Geometry::Point3D& point)
+vector<Geometry::Point3D> PathFinding::PathFinder::findNeighbors(const Geometry::Point3D& inCurrentHighestPoint)
 {
     vector<Geometry::Point3D> neighbors;
 
@@ -72,9 +72,9 @@ vector<Geometry::Point3D> PathFinding::PathFinder::findNeighbors(const Geometry:
 
     for (int i = 0; i < mTriangulation.uniquePoints().size(); ++i) 
     {
-        if (mTriangulation.uniquePoints()[i] == point)
+        if (mTriangulation.uniquePoints()[i] == inCurrentHighestPoint)
         {
-            index = static_cast<int>(i);
+            index = i;
             break;
         }
     }
@@ -86,30 +86,31 @@ vector<Geometry::Point3D> PathFinding::PathFinder::findNeighbors(const Geometry:
         {
             if (neighborIndex >= 0 && neighborIndex < mTriangulation.uniquePoints().size()) 
             {
-                neighbors.push_back(mTriangulation.uniquePoints()[neighborIndex]);
+                if (mTriangulation.uniquePoints()[neighborIndex].z() < inCurrentHighestPoint.z())
+                {
+                    neighbors.push_back(mTriangulation.uniquePoints()[neighborIndex]);
+                }
             }
         }
-    }
+    }    
     return neighbors;
 }
 
-
 //  finds next point in flow path from current point
-Geometry::Point3D PathFinding::PathFinder::findPathFromPoint(const Geometry::Point3D& currentPoint)
+Geometry::Point3D PathFinding::PathFinder::findNextPointInPath(const Geometry::Point3D& inCurrentHighestPoint)
 {
     // assign all neighboring points of current point in "neighbors" vector
-    std::vector<Geometry::Point3D> neighbors = findNeighbors(currentPoint);
+    std::vector<Geometry::Point3D> neighbors = findNeighbors(inCurrentHighestPoint);
 
-    Geometry::Point3D nextPoint = currentPoint;
-
-    double lowestHeight = currentPoint.y();
+    Geometry::Point3D nextPoint = inCurrentHighestPoint;
+    double lowestHeight = std::numeric_limits<double>::max();
     
     // iterate through all neighboring points to find the point with lowest height
     for (const auto& neighbor : neighbors) 
     {
-        if (neighbor.y() < lowestHeight) 
+        if (neighbor.z() < lowestHeight) 
         {
-            lowestHeight = neighbor.y();
+            lowestHeight = neighbor.z();
             nextPoint = neighbor;
         }
     }
@@ -122,37 +123,26 @@ std::vector<Geometry::Point3D> PathFinding::PathFinder::findWaterFlowPath()
     std::vector<Geometry::Point3D> waterFlowPath;
 
     // get value of highest poitnon terrain and add to waterFlowPath vector
-    Geometry::Point3D currentPoint = findHighestPoint();
-    waterFlowPath.push_back(currentPoint);
-
-    // iterations limit to prevent infinite loop
-    const int maxIterations = 10000;
-    int iterationCount = 0;
+    Geometry::Point3D currentHighestPoint = findHighestPoint();
+    waterFlowPath.push_back(currentHighestPoint);
 
     // find water flow path until no lower neighbor is found
-    while (iterationCount < maxIterations)
+    while (true)
     {
         // find next point from current point
-        Geometry::Point3D nextPoint = findPathFromPoint(currentPoint);
+        Geometry::Point3D nextPoint = findNextPointInPath(currentHighestPoint);
 
         // if next point is equal or higher than current point, stop
-        if (nextPoint.y() >= currentPoint.y()) 
+        if (nextPoint.z() >= currentHighestPoint.z())
         {
             break;
         }
-
+        
         // add next point in waterFlowPath vector
         waterFlowPath.push_back(nextPoint);
         
         // assign next point as current point for next iteration
-        currentPoint = nextPoint;
-        iterationCount++;
+        currentHighestPoint = nextPoint;
     }
-
-    if (iterationCount >= maxIterations)
-    {
-        std::cerr << "Max iterations reached -> possible infinite loop issue." << std::endl;
-    }
-
     return waterFlowPath;
 }

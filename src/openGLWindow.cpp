@@ -79,7 +79,6 @@ void OpenGLWindow::initializeGL()
         "uniform highp mat4 matrix;\n"
         "void main() {\n"
         "   col = colAttr;\n"
-        "   gl_PointSize = 5000.0;\n"
         "   gl_Position = matrix * posAttr;\n"
         "}\n";
 
@@ -119,10 +118,10 @@ void OpenGLWindow::setRenderAttributes(const vector<Geometry::Point3D>& inTerrai
         mTerrainVertices.push_back((point.y()));
         mTerrainVertices.push_back((point.z()));
 
-        // white color
-        mTerrainColors.push_back(1.0f); 
-        mTerrainColors.push_back(1.0f); 
-        mTerrainColors.push_back(1.0f); 
+        // olive green color
+        mTerrainColors.push_back(0.502f); 
+        mTerrainColors.push_back(0.502f); 
+        mTerrainColors.push_back(0.0f); 
     }
 
     for (const auto& point : inWaterFlowPathVertices) 
@@ -131,12 +130,11 @@ void OpenGLWindow::setRenderAttributes(const vector<Geometry::Point3D>& inTerrai
         mWaterFlowPathVertices.push_back((point.y()));
         mWaterFlowPathVertices.push_back((point.z()));
 
-        // blue color
-        mWaterFlowPathColors.push_back(0.0f); 
+        // electric blue color
         mWaterFlowPathColors.push_back(0.0f); 
         mWaterFlowPathColors.push_back(1.0f); 
+        mWaterFlowPathColors.push_back(1.0f); 
     }
-
     update();
 }
 
@@ -158,7 +156,7 @@ void OpenGLWindow::paintGL()
 
     glVertexAttribPointer(m_posAttr, 3, GL_DOUBLE, GL_FALSE, 0, mTerrainVertices.data());
     glVertexAttribPointer(m_colAttr, 3, GL_DOUBLE, GL_FALSE, 0, mTerrainColors.data());
-    glDrawArrays(GL_TRIANGLES, 0, mTerrainVertices.size() / 3);
+    glDrawArrays(GL_LINES, 0, mTerrainVertices.size() / 3);
 
     glLineWidth(10.0f);
     glVertexAttribPointer(m_posAttr, 3, GL_DOUBLE, GL_FALSE, 0, mWaterFlowPathVertices.data());
