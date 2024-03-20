@@ -27,7 +27,7 @@ void PathFinding::PathFinder::buildAdjacencyList()
 {
     // initialize adjacency list with empty vectors for each unique point
     mAdjacencyList.resize(mTriangulation.uniquePoints().size());
-    
+
     // iterate through each triangle to create adjacency list
     for (const auto& triangle : mTriangulation.triangles())
     {
