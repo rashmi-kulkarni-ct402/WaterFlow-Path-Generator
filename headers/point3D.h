@@ -13,7 +13,6 @@ namespace Geometry
         double z() const;
         bool operator<(const Point3D& other) const;
         bool operator==(const Point3D& other) const;
-        //bool operator!=(const Point3D& other) const;
 
 
     private:
